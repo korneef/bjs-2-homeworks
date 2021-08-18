@@ -1,12 +1,10 @@
 function Student(name, gender, age) {
-    // Ваш код
 this.name = name;
 this.gender = gender;
 this.age = age;
 }
 
 Student.prototype.setSubject = function (subjectName) {
-  //ваш код
   this.subject = subjectName;
 }
 
@@ -28,7 +26,7 @@ Student.prototype.addMarks = function (...marksNew) {
 }
 
 Student.prototype.getAverage = function() {
-  let average = this.marks.reduce((acc, item, idx) => {
+  return this.marks.reduce((acc, item, idx) => {
     acc+= item;
     if (idx === this.marks.length - 1) {
       return (acc / this.marks.length);
@@ -36,7 +34,6 @@ Student.prototype.getAverage = function() {
       return acc;
     }
   })
-  return average
 }
 
 Student.prototype.excludeStudent = function(reason) {
