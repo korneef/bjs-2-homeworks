@@ -127,21 +127,54 @@ class Student {
   marks = [];
 
   addMark(mark, discipline) {
-    if (mark > 5 && mark < 1) {
-      return false
+    if (mark > 5 || mark < 1) {
+      return console.log('Ошибка, оценка должна быть числом от 1 до 5');
     } else {
       let discIndex = this.marks.findIndex((item) => item.name === discipline);
       if (discIndex != -1) {
-        this.marks[discIndex].marksOnDiscipline.push(mark)
+        this.marks[discIndex].marksOnDiscipline.push(mark);
       } else {
         this.addDiscipline(discipline);
-        this.marks[this.marks.findIndex((item) => item.name === discipline)].marksOnDiscipline.push(mark)
-      }
-    }
+        this.marks[this.marks.findIndex((item) => item.name === discipline)].marksOnDiscipline.push(mark);
+      };
+    };
   };
 
   addDiscipline(discipline) {
     this.marks.push(new Discipline(discipline));
+  };
+
+  getAverageBySubject(discipline) {
+    if (this.marks.some((item) => item.name === discipline)) {
+      let discIndex = this.marks.findIndex((item) => item.name === discipline);
+      this.marks[discIndex].marksOnDiscipline.reduce((acc, item, idx) => {
+        acc += item;
+        if (idx === this.marks[discIndex].marksOnDiscipline.length - 1) {
+          return console.log('Средняя оценка', (acc / this.marks[discIndex].marksOnDiscipline.length));
+        } else {
+          return console.log('оценок нет');
+        };
+      });
+    } else {
+      return console.log(`Предмета ${discipline} не существует`);
+    };
+  };
+
+  getAverage() {
+    let sum = 0;
+    let lengthMarks = 0;
+    this.marks.forEach((item, idx) => {
+      // item.marksOnDiscipline.reduce((acc, item, idx) => acc += item);
+      // acc +=acc;
+      sum += item.marksOnDiscipline.reduce((acc, item, idx) => acc += item);
+      lengthMarks += item.marksOnDiscipline.length;
+    });
+    return console.log(`Средняя оценка по всем предметам ${sum / lengthMarks}`)
+  };
+  exclude(reason) {
+    delete this.marks;
+    this.excluded = reason;
+    console.log(reason)
   }
 };
 
@@ -152,13 +185,15 @@ class Discipline {
   marksOnDiscipline = [];
 };
 
+
+
 const student = new Student("Олег Никифоров");
 student.addMark(5, "algebra");
 student.addMark(5, "algebra");
 student.addMark(5, "geometry");
 student.addMark(4, "geometry");
 student.addMark(6, "geometry"); // "Ошибка, оценка должна быть числом от 1 до 5"
-// student.getAverageBySubject("geometry"); // Средний балл по предмету geometry 4.5
-// student.getAverageBySubject("biology"); // Несуществующий предмет
-// student.getAverage(); // Средний балл по всем предметам 4.75
-// student.exclude("Исключен за попытку подделать оценки");
+student.getAverageBySubject("geometry"); // Средний балл по предмету geometry 4.5
+student.getAverageBySubject("biology"); // Несуществующий предмет
+student.getAverage(); // Средний балл по всем предметам 4.75
+student.exclude("Исключен за попытку подделать оценки");
