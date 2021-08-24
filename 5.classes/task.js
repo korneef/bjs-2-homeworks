@@ -85,39 +85,6 @@ class Library {
   };
 };
 
-const library = new Library("Библиотека имени Ленина");
-
-library.addBook(
-  new DetectiveBook(
-    "Артур Конан Дойл",
-    "Полное собрание повестей и рассказов о Шерлоке Холмсе в одном томе",
-    2019,
-    1008
-  )
-);
-library.addBook(
-  new FantasticBook(
-    "Аркадий и Борис Стругацкие",
-    "Пикник на обочине",
-    1972,
-    168
-  )
-);
-library.addBook(new NovelBook("Герберт Уэллс", "Машина времени", 1895, 138));
-library.addBook(new Magazine("Мурзилка", 1924, 60));
-
-console.log(library.findBookBy("name", "Властелин колец")); //null
-console.log(library.findBookBy("releaseDate", 1924).name); //"Мурзилка"
-
-console.log("Количество книг до выдачи: " + library.books.length); //Количество книг до выдачи: 4
-library.giveBookByName("Машина времени");
-console.log("Количество книг после выдачи: " + library.books.length); //Количество книг после выдачи: 3
-
-
-
-
-
-
 class Student {
   constructor(name, gender, age) {
     this.name = name;
@@ -147,14 +114,18 @@ class Student {
   getAverageBySubject(discipline) {
     if (this.marks.some((item) => item.name === discipline)) {
       let discIndex = this.marks.findIndex((item) => item.name === discipline);
+      let index;
+      let accMark;
       this.marks[discIndex].marksOnDiscipline.reduce((acc, item, idx) => {
         acc += item;
-        if (idx === this.marks[discIndex].marksOnDiscipline.length - 1) {
-          return console.log('Средняя оценка', (acc / this.marks[discIndex].marksOnDiscipline.length));
-        } else {
-          return console.log('оценок нет');
-        };
+        accMark = acc;
+        index = idx;
       });
+      if (index === this.marks[discIndex].marksOnDiscipline.length - 1) {
+        return accMark / this.marks[discIndex].marksOnDiscipline.length;
+      } else {
+        return console.log('оценок нет');
+      };
     } else {
       return console.log(`Предмета ${discipline} не существует`);
     };
@@ -164,18 +135,17 @@ class Student {
     let sum = 0;
     let lengthMarks = 0;
     this.marks.forEach((item, idx) => {
-      // item.marksOnDiscipline.reduce((acc, item, idx) => acc += item);
-      // acc +=acc;
       sum += item.marksOnDiscipline.reduce((acc, item, idx) => acc += item);
       lengthMarks += item.marksOnDiscipline.length;
     });
-    return console.log(`Средняя оценка по всем предметам ${sum / lengthMarks}`)
+    return sum / lengthMarks;
   };
+
   exclude(reason) {
     delete this.marks;
     this.excluded = reason;
-    console.log(reason)
-  }
+    console.log(reason);
+  };
 };
 
 class Discipline {
@@ -185,15 +155,14 @@ class Discipline {
   marksOnDiscipline = [];
 };
 
+// let student;
+
+// student = new Student("Иван Петров");
 
 
-const student = new Student("Олег Никифоров");
-student.addMark(5, "algebra");
-student.addMark(5, "algebra");
-student.addMark(5, "geometry");
-student.addMark(4, "geometry");
-student.addMark(6, "geometry"); // "Ошибка, оценка должна быть числом от 1 до 5"
-student.getAverageBySubject("geometry"); // Средний балл по предмету geometry 4.5
-student.getAverageBySubject("biology"); // Несуществующий предмет
-student.getAverage(); // Средний балл по всем предметам 4.75
-student.exclude("Исключен за попытку подделать оценки");
+
+// student.addMark(3, "algebra");
+// student.addMark(5, "algebra");
+// student.getAverageBySubject("algebra")
+
+
