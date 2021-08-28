@@ -91,38 +91,31 @@ class Student {
     this.gender = gender;
     this.age = age;
   };
-  marks = [];
+  marks = {};
 
   addMark(mark, discipline) {
     if (mark > 5 || mark < 1) {
       return console.log('Ошибка, оценка должна быть числом от 1 до 5');
     } else {
-      let discIndex = this.marks.findIndex((item) => item.name === discipline);
-      if (discIndex != -1) {
-        this.marks[discIndex].marksOnDiscipline.push(mark);
+      if (this.marks[discipline] != undefined) {
+        this.marks[discipline].push(mark);
       } else {
         this.addDiscipline(discipline);
-        this.marks[this.marks.findIndex((item) => item.name === discipline)].marksOnDiscipline.push(mark);
+        this.marks[discipline].push(mark);
       };
     };
   };
 
   addDiscipline(discipline) {
-    this.marks.push(new Discipline(discipline));
+    this.marks[discipline] = [];
   };
 
   getAverageBySubject(discipline) {
-    if (this.marks.some((item) => item.name === discipline)) {
-      let discIndex = this.marks.findIndex((item) => item.name === discipline);
-      let index;
-      let accMark;
-      this.marks[discIndex].marksOnDiscipline.reduce((acc, item, idx) => {
-        acc += item;
-        accMark = acc;
-        index = idx;
-      });
-      if (index === this.marks[discIndex].marksOnDiscipline.length - 1) {
-        return accMark / this.marks[discIndex].marksOnDiscipline.length;
+    if (this.marks[discipline] != undefined) {
+      
+        if (this.marks[discipline].length > 0) {
+          let sum = this.marks[discipline].reduce((acc, item) => acc += item);
+        return sum / this.marks[discipline].length
       } else {
         return console.log('оценок нет');
       };
@@ -132,13 +125,14 @@ class Student {
   };
 
   getAverage() {
+    let length = 0;
     let sum = 0;
-    let lengthMarks = 0;
-    this.marks.forEach((item, idx) => {
-      sum += item.marksOnDiscipline.reduce((acc, item, idx) => acc += item);
-      lengthMarks += item.marksOnDiscipline.length;
-    });
-    return sum / lengthMarks;
+    for (let key in this.marks) {
+      sum += this.marks[key].reduce((acc, item) => acc += item);
+      length += this.marks[key].length;
+    }
+
+    return sum / length
   };
 
   exclude(reason) {
@@ -147,22 +141,3 @@ class Student {
     console.log(reason);
   };
 };
-
-class Discipline {
-  constructor(discipline) {
-    this.name = discipline;
-  };
-  marksOnDiscipline = [];
-};
-
-// let student;
-
-// student = new Student("Иван Петров");
-
-
-
-// student.addMark(3, "algebra");
-// student.addMark(5, "algebra");
-// student.getAverageBySubject("algebra")
-
-
